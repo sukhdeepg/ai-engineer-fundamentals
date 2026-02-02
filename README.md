@@ -27,3 +27,35 @@ If the model responds inappropriately, that issue gets documented and fixed thro
 **Why it matters:** Red teaming helps identify blind spots in safety training. Companies like OpenAI, Anthropic, and Google hire external experts (security researchers, ethicists, domain specialists) to red team models before public release.
 
 **Key point:** It's *proactive security testing* — finding and fixing problems before bad actors exploit them in the wild.
+
+---
+
+**Regularization = Preventing Overfitting**
+
+Both L1 and L2 add a "penalty" during training to keep model weights from getting too large, which helps the model generalize better to new data instead of just memorizing training data.
+
+**L1 Regularization (Lasso)**
+
+Adds penalty based on the *absolute value* of weights: |w₁| + |w₂| + |w₃|...
+
+**Key behavior:** Pushes some weights all the way to **zero** — effectively removing features.
+
+*Intuitive analogy:* Like packing for a trip with a strict baggage limit. We're forced to completely leave behind items that aren't essential. Only the most important things make it into our suitcase.
+
+*Example:* We're predicting house prices with 50 features. L1 might zero out 35 of them, leaving only the 15 most important ones (like location, size, age). We get **automatic feature selection**.
+
+**L2 Regularization (Ridge)**
+
+Adds penalty based on the *square* of weights: w₁² + w₂² + w₃²...
+
+**Key behavior:** Makes all weights **small but non-zero**. Spreads influence across features.
+
+*Intuitive analogy:* Like turning down the volume on all our music equalizer bars. Nothing gets muted completely, but everything becomes more balanced and less extreme.
+
+*Example:* Same house price prediction. L2 keeps all 50 features but shrinks their weights proportionally. Features still contribute, just less aggressively.
+
+**Quick comparison:**
+- **L1** → Sparse (many zeros) → Feature selection
+- **L2** → Dense (all small) → Weight shrinkage
+
+**When to use:** L1 when we want simplicity/interpretability; L2 when all features might matter but need to be tamed.
