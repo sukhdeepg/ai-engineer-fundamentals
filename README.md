@@ -99,3 +99,24 @@ They decide what signal a neuron passes forward.
 - Working with RNNs/LSTMs? → Maybe **Tanh**
 
 ---
+
+**Overfitting and Underfitting = Getting the Balance Wrong**
+Both are about how well our model generalizes to new, unseen data.
+
+**Underfitting = Model is Too Simple**
+The model hasn't learned enough from the training data. It's like a student who didn't study and guesses randomly.
+**Real example:** We're predicting house prices but only use a straight line based on square footage. Reality is more complex (location, age, condition matter), so our model performs poorly on both training data AND new houses.
+**Signs:**
+- Low accuracy on training data
+- Low accuracy on test data
+- Model is too basic to capture patterns
+**Fix:** Use a more complex model, add more features, train longer.
+
+**Overfitting = Model Memorized Instead of Learning**
+The model learned the training data *too well*, including all the noise and quirks. It's like a student who memorized answers but doesn't understand concepts.
+**Real example:** We build a house price predictor with 100 features and a super complex model. It perfectly predicts every house in our training set (even weird outliers), but fails miserably on new houses because it memorized specifics instead of learning general patterns.
+**Signs:**
+- Very high accuracy on training data
+- Much lower accuracy on test data
+- Big gap between training and test performance
+**Fix:** Get more training data, use regularization (L1/L2), simplify the model, use dropout, early stopping.
