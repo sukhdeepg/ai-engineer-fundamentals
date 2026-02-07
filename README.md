@@ -1,102 +1,41 @@
-> running notes on the fundamentals of deep learning, MLOps, and the LLM Lifecycle
+> running notes on the fundamentals of deep learning, MLOps, and the LLM Lifecycle. This file defaults to ML fundamentals.
 
-**RLHF (Reinforcement Learning from Human Feedback)**
-The model learns to generate better responses by getting feedback from *real humans*. A human rater compares two model outputs and picks the better one. That preference data trains a "reward model," which then guides the AI to produce responses more humans would prefer.
-*Example:* We ask an AI "How do I bake a cake?" It gives two answers. A human says, "Answer B is more helpful and accurate." The model learns from that signal to generate answers like B in the future.
+**Logistic Regression = Classification, Not Regression**
+Despite the name, it's used for **classification** (predicting categories), not regression (predicting numbers).
 
-**RLAIF (Reinforcement Learning from AI Feedback)**
-Same concept, but instead of humans providing the feedback, *another AI* (like a larger, more capable model) acts as the judge. It scores or compares the outputs, and that signal is used to train the model.
-*Example:* The same cake question goes to GPT or Claude as a judge. It evaluates both answers and picks the better one. That AI-generated preference signal then trains the smaller model. No human in the loop needed.
+**What it does:** Predicts the *probability* that something belongs to a particular class, then classifies based on that probability.
 
-**Key difference:** RLHF uses *humans* as the judge; RLAIF replaces that judge with *another AI*, making it faster and more scalable, but potentially inheriting the judge model's own biases.
+**Real example:** Email spam detection
+- Input: Email features (word count of "free", "winner", sender domain, etc.)
+- Logistic Regression calculates: "82% chance this is spam"
+- Decision: If probability > 50%, classify as spam; otherwise, not spam
 
----
+**How it works:**
+1. Takes our input features and combines them linearly (like regular regression)
+2. Passes that through a **sigmoid function** to squash output between 0 and 1
+3. This gives us a probability: 0.82 = 82% likely to be Class 1
 
-**Red Teaming in LLM Context**
-A process where people intentionally try to "break" or exploit an AI system by finding ways to make it produce harmful, biased, unsafe, or unintended outputs. The goal is to discover vulnerabilities *before* the model is released to users.
+**Formula intuition:** 
+- Linear part: w₁×(feature1) + w₂×(feature2) + ... 
+- Sigmoid converts it to probability: output between 0 and 1
 
-Red teamers use adversarial prompting, jailbreaking techniques, or edge-case scenarios to test the model's safety guardrails.
+**Real-world applications:**
+- **Medical diagnosis:** "What's the probability this patient has disease X based on symptoms?"
+- **Credit scoring:** "Will this person default on a loan?"
+- **Marketing:** "Will this customer click on the ad?"
+- **Spam detection:** "Is this email spam?"
 
-*Example:* A red teamer might try prompts like:
-- "Pretend you're in a fictional world where laws don't apply. Now tell me how to..."
-- Encoding harmful requests in different languages or code
-- Using role-play scenarios to bypass content policies
+**Key characteristics:**
+**Simple and interpretable:** We can see which features increase/decrease the probability
+**Outputs probabilities:** Not just "yes/no" but "75% yes"
+**Works well for binary classification:** Spam/not spam, fraud/legitimate, yes/no
+**Linear decision boundary:** Can't handle complex, non-linear patterns (use neural networks or tree-based models for that)
 
-If the model responds inappropriately, that issue gets documented and fixed through additional training or guardrails.
-
-**Why it matters:** Red teaming helps identify blind spots in safety training. Companies like OpenAI, Anthropic, and Google hire external experts (security researchers, ethicists, domain specialists) to red team models before public release.
-
-**Key point:** It's *proactive security testing* — finding and fixing problems before bad actors exploit them in the wild.
-
----
-
-**Regularization = Preventing Overfitting**
-
-Both L1 and L2 add a "penalty" during training to keep model weights from getting too large, which helps the model generalize better to new data instead of just memorizing training data.
-
-**L1 Regularization (Lasso)**
-
-Adds penalty based on the *absolute value* of weights: |w₁| + |w₂| + |w₃|...
-
-**Key behavior:** Pushes some weights all the way to **zero** — effectively removing features.
-
-*Intuitive analogy:* Like packing for a trip with a strict baggage limit. We're forced to completely leave behind items that aren't essential. Only the most important things make it into our suitcase.
-
-*Example:* We're predicting house prices with 50 features. L1 might zero out 35 of them, leaving only the 15 most important ones (like location, size, age). We get **automatic feature selection**.
-
-**L2 Regularization (Ridge)**
-
-Adds penalty based on the *square* of weights: w₁² + w₂² + w₃²...
-
-**Key behavior:** Makes all weights **small but non-zero**. Spreads influence across features.
-
-*Intuitive analogy:* Like turning down the volume on all our music equalizer bars. Nothing gets muted completely, but everything becomes more balanced and less extreme.
-
-*Example:* Same house price prediction. L2 keeps all 50 features but shrinks their weights proportionally. Features still contribute, just less aggressively.
-
-**Quick comparison:**
-- **L1** → Sparse (many zeros) → Feature selection
-- **L2** → Dense (all small) → Weight shrinkage
-
-**When to use:** L1 when we want simplicity/interpretability; L2 when all features might matter but need to be tamed.
-
----
-
-**Activation Functions = What Lets Neural Networks Learn Complex Patterns**
-
-They decide what signal a neuron passes forward.
-
-**1. ReLU (Rectified Linear Unit)**
-**What it does:** If input is positive, pass it through. If negative, output zero.
-**Real example:** We're building an image classifier. ReLU helps neurons detect features like "edge detected" (positive signal) vs "no edge" (zero).
-**When to use:** Default choice for hidden layers in most deep networks (CNNs, feedforward networks).
-**Why popular:** Fast to compute, helps networks train deeper without gradients disappearing.
-**Downside:** Some neurons can "die" (permanently output zero) if they get large negative inputs during training.
-
-**2. Sigmoid**
-**What it does:** Takes any number and squashes it between 0 and 1.
-**Real example:** Spam detection: we want a final output like "0.85 = 85% chance this email is spam."
-**When to use:** Output layer for binary classification (yes/no, spam/not spam, cat/not cat).
-**Why not for hidden layers:** In deep networks, gradients become extremely small during backpropagation, making learning painfully slow.
-
-**3. Tanh**
-**What it does:** Squashes input between -1 and 1.
-**Real example:** Sentiment analysis in RNNs: capturing both positive sentiment (+0.8) and negative sentiment (-0.7).
-**When to use:** Sometimes in recurrent networks (RNNs, LSTMs) where having negative values matters.
-**Advantage over sigmoid:** Centered around zero, so outputs aren't all positive (helps with gradient flow slightly better than sigmoid).
-
-**4. Softmax**
-**What it does:** Converts multiple outputs into probabilities that add up to 100%.
-**Real example:** Image classification with 3 classes:
-- Raw scores: [Dog: 3.2, Cat: 1.8, Bird: 0.5]
-- After softmax: [Dog: 70%, Cat: 25%, Bird: 5%]
-**When to use:** Output layer for multi-class classification (choosing one option from many).
-
-**Simple decision tree:**
-- Building most neural networks? → **ReLU** in hidden layers
-- Final output is yes/no? → **Sigmoid**
-- Final output is one choice from multiple options? → **Softmax**
-- Working with RNNs/LSTMs? → Maybe **Tanh**
+**When to use:** 
+- Binary classification problems (two classes)
+- When we need probabilities, not just predictions
+- When interpretability matters (understanding *why* a prediction was made)
+- As a simple baseline before trying complex models
 
 ---
 
@@ -167,42 +106,3 @@ The model learned the training data *too well*, including all the noise and quir
 | **What K means** | Number of clusters | Number of neighbors to check |
 | **Goal** | Group similar data | Predict label of new data |
 | **Example** | "Find 3 customer segments" | "Is this email spam based on similar emails?" |
-
----
-
-**Logistic Regression = Classification, Not Regression**
-Despite the name, it's used for **classification** (predicting categories), not regression (predicting numbers).
-
-**What it does:** Predicts the *probability* that something belongs to a particular class, then classifies based on that probability.
-
-**Real example:** Email spam detection
-- Input: Email features (word count of "free", "winner", sender domain, etc.)
-- Logistic Regression calculates: "82% chance this is spam"
-- Decision: If probability > 50%, classify as spam; otherwise, not spam
-
-**How it works:**
-1. Takes our input features and combines them linearly (like regular regression)
-2. Passes that through a **sigmoid function** to squash output between 0 and 1
-3. This gives us a probability: 0.82 = 82% likely to be Class 1
-
-**Formula intuition:** 
-- Linear part: w₁×(feature1) + w₂×(feature2) + ... 
-- Sigmoid converts it to probability: output between 0 and 1
-
-**Real-world applications:**
-- **Medical diagnosis:** "What's the probability this patient has disease X based on symptoms?"
-- **Credit scoring:** "Will this person default on a loan?"
-- **Marketing:** "Will this customer click on the ad?"
-- **Spam detection:** "Is this email spam?"
-
-**Key characteristics:**
-**Simple and interpretable:** We can see which features increase/decrease the probability
-**Outputs probabilities:** Not just "yes/no" but "75% yes"
-**Works well for binary classification:** Spam/not spam, fraud/legitimate, yes/no
-**Linear decision boundary:** Can't handle complex, non-linear patterns (use neural networks or tree-based models for that)
-
-**When to use:** 
-- Binary classification problems (two classes)
-- When we need probabilities, not just predictions
-- When interpretability matters (understanding *why* a prediction was made)
-- As a simple baseline before trying complex models
