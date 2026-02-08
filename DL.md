@@ -65,3 +65,38 @@ Adds penalty based on the *square* of weights: w₁² + w₂² + w₃²...
 - **L2** → Dense (all small) → Weight shrinkage
 
 **When to use:** L1 when we want simplicity/interpretability; L2 when all features might matter but need to be tamed.
+
+---
+
+**Multi-Head Attention (MHA)**
+**What it does:** Lets the model pay attention to different aspects of the input *simultaneously* from multiple perspectives.
+**Core idea:** Instead of having one attention mechanism, we run multiple attention mechanisms in parallel (each called a "head"), then combine their results.
+
+**Intuitive analogy:** 
+Reading a sentence like "The bank was steep and rocky."
+- **Head 1** might focus on: sentence structure and grammar
+- **Head 2** might focus on: "bank" relates to "steep and rocky" (riverbank, not financial)
+- **Head 3** might focus on: descriptive words and their relationships
+- **Head 4** might focus on: overall context and meaning
+Each head learns to specialize in different types of relationships or patterns.
+
+**Real example in translation:**
+Translating "The cat sat on the mat" to French:
+- **Head 1:** Focuses on subject-verb agreement ("cat" → "sat")
+- **Head 2:** Focuses on spatial relationships ("sat" → "on" → "mat")
+- **Head 3:** Focuses on article-noun pairs ("the" → "cat", "the" → "mat")
+- **Head 4:** Focuses on overall sentence structure
+By having multiple heads, the model captures different linguistic relationships simultaneously instead of trying to do everything with one attention mechanism.
+
+**How it works (simplified):**
+1. Split the input into multiple "heads" (typically 8 or 12)
+2. Each head independently computes attention (what to focus on)
+3. Concatenate all head outputs
+4. Pass through a final linear layer to combine insights
+
+**Why it matters:**
+**Richer representations:** Captures multiple types of relationships at once
+**Specialization:** Different heads learn different patterns (syntax, semantics, long-range dependencies)
+**Core of Transformers:** Powers models like GPT, BERT, Claude
+
+**When we see it:** Any Transformer-based model (LLMs, vision transformers, speech models)
