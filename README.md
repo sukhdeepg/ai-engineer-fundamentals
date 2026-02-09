@@ -1,41 +1,6 @@
 > running notes on the fundamentals of deep learning, MLOps, and the LLM Lifecycle. This file defaults to ML fundamentals.
 
-**Logistic Regression = Classification, Not Regression**
-Despite the name, it's used for **classification** (predicting categories), not regression (predicting numbers).
-
-**What it does:** Predicts the *probability* that something belongs to a particular class, then classifies based on that probability.
-
-**Real example:** Email spam detection
-- Input: Email features (word count of "free", "winner", sender domain, etc.)
-- Logistic Regression calculates: "82% chance this is spam"
-- Decision: If probability > 50%, classify as spam; otherwise, not spam
-
-**How it works:**
-1. Takes our input features and combines them linearly (like regular regression)
-2. Passes that through a **sigmoid function** to squash output between 0 and 1
-3. This gives us a probability: 0.82 = 82% likely to be Class 1
-
-**Formula intuition:** 
-- Linear part: w₁×(feature1) + w₂×(feature2) + ... 
-- Sigmoid converts it to probability: output between 0 and 1
-
-**Real-world applications:**
-- **Medical diagnosis:** "What's the probability this patient has disease X based on symptoms?"
-- **Credit scoring:** "Will this person default on a loan?"
-- **Marketing:** "Will this customer click on the ad?"
-- **Spam detection:** "Is this email spam?"
-
-**Key characteristics:**
-**Simple and interpretable:** We can see which features increase/decrease the probability
-**Outputs probabilities:** Not just "yes/no" but "75% yes"
-**Works well for binary classification:** Spam/not spam, fraud/legitimate, yes/no
-**Linear decision boundary:** Can't handle complex, non-linear patterns (use neural networks or tree-based models for that)
-
-**When to use:** 
-- Binary classification problems (two classes)
-- When we need probabilities, not just predictions
-- When interpretability matters (understanding *why* a prediction was made)
-- As a simple baseline before trying complex models
+![Logistic regression](images/logistic_regression.png)
 
 ---
 
